@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Panel Użytkownika</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; padding-top: 50px; background: #f0f2f5; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 400px; text-align: center; }
+        .status { color: #d9534f; font-weight: bold; margin: 20px 0; }
+        .btn { display: inline-block; padding: 10px 20px; background: #28a745; color: white; text-decoration: none; border-radius: 5px; }
+        .admin-btn { background: #dc3545; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Witaj w systemie!</h2>
+        <p>Jesteś zalogowany jako: <strong id="username">Pobieranie...</strong></p>
+        <div class="status">Uprawnienia administratora: BRAK</div>
+        <hr>
+        <p>Tylko administratorzy mają dostęp do tajnych danych.</p>
+        <a href="/api/admin" class="btn admin-btn">Przejdź do Panelu Admina</a>
+        <br><br>
+        <a href="/" onclick="document.cookie='auth_token=; Max-Age=0';">Wyloguj się</a>
+    </div>
+    <script src="/config.js"></script>
+    <script>
+        // Proste wyciąganie nazwy użytkownika z tokena w ciasteczku (bez weryfikacji)
+        const token = document.cookie.split('; ').find(row => row.startsWith('auth_token='))?.split('=')[1];
+        if (token) {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            document.getElementById('username').innerText = payload.user;
+        } else {
+            window.location.href = "/";
+        }
+    </script>
+</body>
+</html>
